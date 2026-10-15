@@ -4,7 +4,7 @@
 - **Runtime:** Roblox Studio, Rojo 7.7.1 live-sync from `src/`
 - **Language:** Luau `--!strict`, verified by luau-lsp (sourcemap-driven DataModel types)
 - **ECS:** jecs (Wally) — server-side entities for enemies, loot drops, tide zones
-- **Networking:** blink (Wally) — typed remotes, single replacement for RemoteEvent soup
+- **Networking:** blink 0.18.9 (rokit CLI) — IDL at `net/Net.blink` compiles to `net/gen/{Server,Client,Types}.luau`; Rojo maps those files in as `Net` ModuleScripts (single file = the module itself, no children). `tools/check.sh` runs codegen first.
 - **Utilities:** Promise, Trove, Signal (Wally) — lifecycle hygiene
 - **Testing:** luau-lsp analyze + selene + stylua gates; manual playtest via Studio MCP
   (play solo + console log read + screenshot)

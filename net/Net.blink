@@ -1,0 +1,35 @@
+option Casing = Pascal
+option ServerOutput = "../net/gen/Server.luau"
+option ClientOutput = "../net/gen/Client.luau"
+option TypesOutput = "../net/gen/Types.luau"
+
+-- P1: movement + combat intents. Server validates everything.
+-- Client -> Server
+event RollRequest {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: (f32, f32), -- normalized move direction (x, z), world space
+}
+
+event SwingRequest {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	-- no data: server raycasts from the character; clients never name targets
+}
+
+-- Server -> Client
+event RollResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleSync,
+	Data: u8, -- 0 = granted, 1 = on cooldown
+}
+
+event SwingResult {
+	From: Server,
+	Type: Reliable,
+	Call: ManySync,
+	Data: (u8, f32, Instance?), -- 0 = hit, 1 = miss/cooldown; damage dealt; target part
+}

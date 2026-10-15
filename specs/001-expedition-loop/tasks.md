@@ -14,12 +14,13 @@
 - [ ] T0.8 `rojo serve` + plugin Connect → live-sync verified (edit a test script, see it land)
 
 ## P1 — Movement & combat feel
-- [ ] T1.1 Config: Config/Stats.luau (walk/sprint/roll numbers, i-frames, cooldowns)
-- [ ] T1.2 Net: blink contract (input intents, combat events)
-- [ ] T1.3 Client: sprint (surge speed) + no-fall-damage (Humanoid state guard)
-- [ ] T1.4 Client+Server: dodge-roll with 0.3s i-frames, 1.2s cooldown, server-checked
-- [ ] T1.5 Server: melee validation (range, cooldown, LOS) + damage application
-- [ ] T1.6 Gate: analyze+selene+stylua green; playtest sprint/roll/hit vs dummy
+- [x] T1.1 Config: Config/Stats.luau (walk/sprint/roll numbers, i-frames, cooldowns)
+- [x] T1.2 Net: blink contract net/Net.blink → codegen to net/gen/ (mapped into tree via default.project.json); RollRequest/SwingRequest/RollResult/SwingResult
+- [x] T1.3 Client: sprint (26 vs 16 walk) + no-fall-damage (free via Humanoid)
+- [x] T1.4 Client+Server: dodge-roll — server validates cooldown + grants i-frames; client predicts the dash velocity on grant
+- [x] T1.5 Server: melee validation (8-stud ray, cooldown) + attribute damage on TrainingDummy
+- [x] T1.6a Gate: `tools/check.sh` ALL GATES GREEN (blink → selene 0/0 → stylua clean → analyze 0 errors w/ sourcemap → rojo build OK)
+- [ ] T1.6b Playtest: needs Studio session (MCP toggle pending, or manual F5: Shift sprint / Q roll / F swing vs the red dummy)
 
 ## P2 — Day cycle & Night's Tide
 - [ ] T2.1 Config: Config/DayTimeline.luau (authentic + compressed) + Config/TideDoT.luau

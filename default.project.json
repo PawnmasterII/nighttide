@@ -8,20 +8,29 @@
         "$path": "Packages"
       },
       "Shared": {
-        "$path": "src/shared"
+        "$path": "src/shared",
+        "Net": {
+          "$path": "net/gen/Types.luau"
+        }
       }
     },
 
     "ServerScriptService": {
       "Server": {
-        "$path": "src/server"
+        "$path": "src/server",
+        "Net": {
+          "$path": "net/gen/Server.luau"
+        }
       }
     },
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
-          "$path": "src/client"
+          "$path": "src/client",
+          "Net": {
+            "$path": "net/gen/Client.luau"
+          }
         }
       }
     },
