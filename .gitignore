@@ -1,0 +1,13 @@
+# Project place file
+/nighttide.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+sourcemap.json
+
+# Wally packages (restored via `wally install`)
+Packages/
+ServerPackages/
+DevPackages/

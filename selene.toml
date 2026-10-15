@@ -1,0 +1,6 @@
+# Selene linter config — Roblox standard library
+std = "roblox"
+
+[lints]
+high_cyclomatic_complexity = "warn"
+# unused_variable is on by default; keep strict

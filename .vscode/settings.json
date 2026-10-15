@@ -1,0 +1,12 @@
+{
+	"luau-lsp.sourcemap.enabled": true,
+	"luau-lsp.sourcemap.autogenerate": true,
+	"luau-lsp.sourcemap.rojoProjectFile": "default.project.json",
+	"luau-lsp.platform.type": "roblox",
+	"luau-lsp.diagnostics.strictDatamodelTypes": false,
+	"files.associations": {
+		"*.luau": "luau"
+	},
+	"editor.formatOnSave": true,
+	"lua.formatter.default": "stylua"
+}
