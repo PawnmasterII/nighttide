@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Stats = require(ReplicatedStorage.Shared.Config.Stats)
 local Net = require(script.Net)
+local Tide = require(script.Tide)
 
 local Movement = {}
 
@@ -109,7 +110,9 @@ function Movement.Start()
 		applySpeed()
 	end)
 
-	print("[NightTide] client up — Shift sprint, Q roll, F swing")
+	Tide.Start()
+
+	print("[NightTide] client up — Shift sprint · Q roll · F swing")
 end
 
 return Movement

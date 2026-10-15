@@ -23,12 +23,13 @@
 - [ ] T1.6b Playtest: needs Studio session (MCP toggle pending, or manual F5: Shift sprint / Q roll / F swing vs the red dummy)
 
 ## P2 — Day cycle & Night's Tide
-- [ ] T2.1 Config: Config/DayTimeline.luau (authentic + compressed) + Config/TideDoT.luau
-- [ ] T2.2 Server: Match state machine (DAY1→NIGHT1→DAY2→NIGHT2→SHELTER→NIGHTLORD→END)
-- [ ] T2.3 Server: tide ring (center/radius/phase) + DoT application + exposure ramp
-- [ ] T2.4 Client: tide ring render (beams/particles wall) + HP tint + DoT prediction
-- [ ] T2.5 Server: night boss spawn at ring collapse; day reset on kill
-- [ ] T2.6 Gate: analyze+selene+stylua green; playtest one full compressed day
+- [x] T2.1 Config: Config/DayTimeline.luau (authentic 15:00 + compressed 5:00, one-field switch) + Config/TideDoT.luau (2%+15 → 10%+30 ramp)
+- [x] T2.2 Server: Match state machine (DAY1→NIGHT1→DAY2→NIGHT2→SHELTER→NIGHTLORD→END) — `src/server/Match.luau`
+- [x] T2.3 Server: tide ring (center/radius/phase, seeded center pick) + DoT application + exposure ramp with reset-on-safety
+- [x] T2.4 Client: tide ring render (48-segment ForceField wall, lerped radius) + ambient tint while exposed — `src/client/Tide.luau`
+- [x] T2.5 Server: night boss placeholder at ring collapse (3s), day reset + phase broadcasts
+- [x] T2.6a Gate: ALL GATES GREEN (selene 0/0, stylua clean, analyze 0 errors, rojo build OK)
+- [ ] T2.6b Playtest: stop + F5 → watch ring appear at 1:30 (compressed), collapse at 3:40, phase prints in Output
 
 ## P3 — Farming: runes, levels, loot
 - [ ] T3.1 jecs world + enemy spawner components + basic chase AI

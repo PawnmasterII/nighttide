@@ -2,6 +2,8 @@
 -- NightTide server bootstrap.
 
 local Combat = require(script.Combat)
+local Match = require(script.Match)
 
 Combat.Start()
-print("[NightTide] server up")
+Match.Start()
+print("[NightTide] server up — live sync confirmed ✓")

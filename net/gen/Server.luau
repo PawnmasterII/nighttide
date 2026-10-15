@@ -191,6 +191,24 @@ function SerdesFunctions.WriteEVENT_SwingResult(Value1: number, Value2: number, 
 	table.insert(SendInstances, Value3 or Null)
 end
 
+function SerdesFunctions.WriteEVENT_TidePhase(Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string): ()
+	-- Allocate BLOCK: 18 bytes
+	local BLOCK_START = Allocate(18)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 4)
+	local Length = #Value1
+	buffer.writeu16(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value1, Length)
+	buffer.writeu8(SendBuffer, BLOCK_START + 3, Value2)
+	buffer.writef32(SendBuffer, BLOCK_START + 4, Value3)
+	buffer.writef32(SendBuffer, BLOCK_START + 8, Value4)
+	buffer.writef32(SendBuffer, BLOCK_START + 12, Value5)
+	local Length = #Value6
+	buffer.writeu16(SendBuffer, BLOCK_START + 16, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value6, Length)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -207,6 +225,12 @@ if not RunService:IsRunning() then
 		FireExcept = NOOP
 	},
 	SwingResult = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	TidePhase = {
 		Fire = NOOP,
 		FireAll = NOOP,
 		FireList = NOOP,
@@ -426,6 +450,52 @@ local Returns = table.freeze({
 		FireExcept = function(Except: Player, Value1: number, Value2: number, Value3: Instance?): ()
 			Load()
 			SerdesFunctions.WriteEVENT_SwingResult(Value1, Value2, Value3)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	TidePhase = {
+		Fire = function(Player: Player, Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_TidePhase(Value1, Value2, Value3, Value4, Value5, Value6)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_TidePhase(Value1, Value2, Value3, Value4, Value5, Value6)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_TidePhase(Value1, Value2, Value3, Value4, Value5, Value6)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_TidePhase(Value1, Value2, Value3, Value4, Value5, Value6)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
 			for _, Player in Players:GetPlayers() do
 				if Player == Except then

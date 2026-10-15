@@ -33,3 +33,12 @@ event SwingResult {
 	Call: ManySync,
 	Data: (u8, f32, Instance?), -- 0 = hit, 1 = miss/cooldown; damage dealt; target part
 }
+
+-- P2: expedition timeline + tide ring state
+event TidePhase {
+	From: Server,
+	Type: Reliable,
+	Call: ManySync,
+	-- state name, day index, center x/z, radius, phase tag
+	Data: (string, u8, f32, f32, f32, string),
+}

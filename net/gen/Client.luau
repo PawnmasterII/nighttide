@@ -163,6 +163,8 @@ local SerdesThread: thread?
 Queue.Reliable[2] = table.create(256)
 Events.Reliable[3] = {}
 Queue.Reliable[3] = table.create(256)
+Events.Reliable[4] = {}
+Queue.Reliable[4] = table.create(256)
 function SerdesFunctions.WriteEVENT_RollRequest(Value1: number, Value2: number): ()
 	-- Allocate BLOCK: 9 bytes
 	local BLOCK_START = Allocate(9)
@@ -200,6 +202,20 @@ function SerdesFunctions.ReadEVENT_SwingResult(): (number, number, Instance?)
 	return Value1, Value2, Value3
 end
 
+function SerdesFunctions.ReadEVENT_TidePhase(): (string, number, number, number, number, string)
+	-- Read BLOCK: 17 bytes
+	local BLOCK_START = Read(17)
+	local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 0)
+	local Value1 = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	local Value2 = buffer.readu8(RecieveBuffer, BLOCK_START + 2)
+	local Value3 = buffer.readf32(RecieveBuffer, BLOCK_START + 3)
+	local Value4 = buffer.readf32(RecieveBuffer, BLOCK_START + 7)
+	local Value5 = buffer.readf32(RecieveBuffer, BLOCK_START + 11)
+	Length = buffer.readu16(RecieveBuffer, BLOCK_START + 15)
+	local Value6 = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	return Value1, Value2, Value3, Value4, Value5, Value6
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -213,6 +229,9 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	SwingResult = {
+		On = NOOP
+	},
+	TidePhase = {
 		On = NOOP
 	},
 	})
@@ -281,6 +300,19 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				end
 				table.insert(Queue.Reliable[3], {Value1, Value2, Value3} :: {any})
 			end
+		elseif Index == 4 then
+			local Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string = SerdesFunctions.ReadEVENT_TidePhase()
+			if #Events.Reliable[4] > 0 then
+				for _, Listener in Events.Reliable[4] do
+					SerdesEvent = "TidePhase"
+					Listener(Value1, Value2, Value3, Value4, Value5, Value6)
+				end
+			else
+				if #Queue.Reliable[4] > 256 then
+					warn("[Blink]: Event queue of \"TidePhase\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[4], {Value1, Value2, Value3, Value4, Value5, Value6} :: {any})
+			end
 		end
 	end
 end)
@@ -341,6 +373,21 @@ local Returns = table.freeze({
 				local Index = table.find(Events.Reliable[3], Listener)
 				if Index ~= nil then
 					table.remove(Events.Reliable[3], Index)
+				end
+			end
+		end
+	},
+	TidePhase = {
+		On = function(Listener: (Value1: string, Value2: number, Value3: number, Value4: number, Value5: number, Value6: string) -> ()): () -> ()
+			table.insert(Events.Reliable[4], Listener)
+			for Index, Arguments in Queue.Reliable[4] do
+				Listener(table.unpack(Arguments))
+			end
+			Queue.Reliable[4] = {}
+			return function (): ()
+				local Index = table.find(Events.Reliable[4], Listener)
+				if Index ~= nil then
+					table.remove(Events.Reliable[4], Index)
 				end
 			end
 		end
